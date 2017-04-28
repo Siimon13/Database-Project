@@ -1,5 +1,5 @@
 from app import app
-from flask import Flask, render_template, json, request
+from flask import Flask, render_template, json, request, redirect
 from flask.ext.mysql import MySQL
 
 mysql = MySQL()
@@ -37,3 +37,7 @@ def signUp():
 		return json.dumps({'html': '<span>All is well</span>'})
 	else:
 		return json.dumps({'html':'<span>Error, not valid</span>'})
+
+#@app.route('/logIn', methods = ['GET'])
+#def logIn():
+#use a redirect here to redirect to profile or something
