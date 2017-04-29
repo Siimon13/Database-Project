@@ -1,6 +1,7 @@
 from app import app
 from flask import Flask, render_template, json, request, redirect
 from flask_mysqldb import MySQL
+from flask import jsonify
 
 app.config['MYSQL_USER'] = "hm336fxi35k5wn3y"
 app.config['MYSQL_PASSWORD'] = "sb685ylnubazj6h9"
@@ -26,12 +27,14 @@ def showSignUp():
     conn = mysql.connection
     cur = mysql.connection.cursor()
     
-    query = "SELECT count(*) FROM `airline`;"
+    query = "SELECT * FROM `airline`;"
 
-    # print(request.form)
+    cur.execute(query)
+    result = cur.fetchall()
+    data = jsonify(result)
     
-    print ("RESULT: " + str(cur.execute(query)))
-    return render_template('sign-up.html')
+    print ("RESULT: " + str(result))
+    return render_template('sign-up.html', data = result)
 
 @app.route('/signUp', methods = ['POST'])
 def signUp():
