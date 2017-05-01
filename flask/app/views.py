@@ -49,6 +49,27 @@ def signUp():
     else:
 	return json.dumps({'html':'<span>Error, not valid</span>'})
 
-#@app.route('/logIn', methods = ['GET'])
-#def logIn():
-#use a redirect here to redirect to profile or something
+@app.route('/logIn', methods = ['GET'])
+def logIn():
+    return redirect('profile.html', code = 307)
+
+@app.route('/search', methods = ['GET'])
+def search():
+    _sourceCity = request.form['from']
+    _destination = request.form['to']
+    _departairport = request.form['departairport']
+    _arrairport = request.form['arrairport']
+    _date = request.form['date']
+
+    conn = mysql.connection
+    cur - mysql.connection.cursor()
+
+    query = "SELECT flight_num, airline_name, price FROM `flight` as `f` WHERE f.departure_airport in (SELECT f1.departure_airport FROM `flight` as `f1`natural join `airport` WHERE f1.departure_airport = airport.airport_name AND f1.departure_airport = _departairport AND airport.city = _sourceCity) AND f.arrival_airport in (SELECT f2.arrival_airport FROM `flight` as `f2` natural join `airport` WHERE f2.arrival_airport = airport.airport_name AND f2.arrival_airport = _arrairport AND airport.city = _destination) AND f.departure_time = _date;"
+
+    cur.execute(query)
+
+    result = cur.fetchall()
+    data = jsonify(result)
+
+    print("RESULT: " + str(result))
+    return render_template('flights.html', data = result)

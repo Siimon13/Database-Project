@@ -64,23 +64,22 @@
 	    <div class="form-group">
 		<input type="text" placeholder="From" name="from">
 	    </div>
-	    
+
+	    <div class="form-group">
+		<input type="text" placeholder="departairport" name="departairport">
+	    </div>
+
+	    <div class="form-group">
+		<input type="text" placeholder="arrairport" name="arrairport">
+	    </div>
+
 	    <div class="form-group">
 		<input type="text" placeholder="To" name="to">
 	    </div>
 
 	    <div class="form-group">
-		<div class='input-group date' id='datetimepickerarrive'>
-                    <input type='text' class="form-control" />
-                    <span class="input-group-addon">
-			<span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-		</div>
-	    </div>
-
-	    <div class="form-group">
 		<div class='input-group date' id='datetimepickerdepart'>
-                    <input type='text' class="form-control" />
+                    <input type='text' class="form-control" name = "date">
                     <span class="input-group-addon">
 			<span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -99,7 +98,6 @@
 	
 	<script type="text/javascript">
 	 $(function () {
-	     $('#datetimepickerarrive').datepicker();
 	     $('#datetimepickerdepart').datepicker();
 	 });
 	</script>
