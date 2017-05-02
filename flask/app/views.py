@@ -23,6 +23,11 @@ login_manager.init_app(app)
 def index():
     return render_template('index.html')
 
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session['logged_in'] = False
+    return redirect('/')
+
 @app.route('/showSignUp')
 def showSignUp():
     conn = mysql.connection
@@ -35,8 +40,36 @@ def showSignUp():
     data = jsonify(result)
 
     print ("RESULT: " + str(result))
-    return render_template('sign-up.html', data = result)
+    return render_template('sign-up.html')
 
+@app.route('/signUpFlight', methods = ['POST', 'GET'])
+def signUpFlight():
+
+    message = ""
+    if request.method == 'POST':
+
+        conn = mysql.connection
+        cur = conn.cursor()
+        
+        username = request.form.get('username')
+        password = request.form.get('password')
+        first_name = request.form.get('firstname')
+        last_name = request.form.get('lastname')
+        airline = request.form.get('airline')
+        secret = request.form.get('secret')
+        
+        if secret == 'fightclub':
+            insertquery = "insert into airline_staff (username,password,first_name,last_name,airline_name) values('%s', '%s', '%s', '%s', '%s')" % (username, password, first_name, last_name, airline)
+            cur.execute(insertquery)
+            conn.commit()
+            session['logged_in'] = True
+            session['type'] = "Staff"
+            session['username'] = username
+        else:
+            message = "Are you sure you're supposed to be here. Do I need to call the cops?"
+            
+    return render_template('sign-upflight.html', message=message)
+    
 @app.route('/signUp', methods = ['POST'])
 def signUp():
         if request.method == 'POST':
@@ -48,13 +81,25 @@ def signUp():
             password = request.form.get('password')
             name = request.form.get('name')
 
-            insertquery = "insert into customer (email,password,name) values('%s', '%s', '%s')" % (email, password, name)
-            cur.execute(insertquery)
-            conn.commit()
-            session['logged_in'] = True
-            session['type'] = "Customer"
-            session['email'] = email 
-            print insertquery
+            if '@agent' in email:
+                from random import randint
+                booking_agent_id = randint(100000,999999)
+                insertquery = "insert into booking_agent (email,password,booking_agent_id) values('%s', '%s', '%s')" % (email, password, booking_agent_id)
+                cur.execute(insertquery)
+                conn.commit()
+                session['logged_in'] = True
+                session['type'] = "Booking Agent"
+                session['email'] = email 
+                print insertquery
+                
+            else:    
+                insertquery = "insert into customer (email,password,name) values('%s', '%s', '%s')" % (email, password, name)
+                cur.execute(insertquery)
+                conn.commit()
+                session['logged_in'] = True
+                session['type'] = "Customer"
+                session['email'] = email 
+                print insertquery
                 
         return redirect('/profile')
 
@@ -62,8 +107,19 @@ def signUp():
 def profile():
     if not session.get('logged_in'):
         return redirect('/')
+    elif session['type'] == 'Booking Agent':
+        email = session['email']
+        conn = mysql.connection
+        cur = conn.cursor()
+        query = "SELECT email,booking_agent_id FROM `booking_agent` WHERE email = '%s'" % (email)
+
+        cur.execute(query)
+
+        result = cur.fetchall()
+        print str(result)
+        
     else:
-        email = session['email'];
+        email = session['email']
         conn = mysql.connection
         cur = conn.cursor()
         query = "SELECT * FROM `customer` WHERE email = '%s'" % (email)
@@ -103,18 +159,33 @@ def login():
     email = request.form['email']
     password = request.form['password']
 
-    conn = mysql.connection
-    cur = conn.cursor()
-    query = "SELECT count(*)FROM `customer` WHERE email = '%s' and password = '%s'" % (email,password)
+    if '@agent' in email:
+        conn = mysql.connection
+        cur = conn.cursor()
+        query = "SELECT count(*)FROM `booking_agent` WHERE email = '%s' and password = '%s'" % (email,password)
 
-    cur.execute(query)
+        cur.execute(query)
 
-    result = cur.fetchall()
+        result = cur.fetchall()
+        if ('1' in str(result)):
+            session['logged_in'] = True
+            session['type'] = "Booking Agent"
+            session['email'] = email 
 
-    if ('1' in str(result)):
-        session['logged_in'] = True
-        session['type'] = "Customer"
-        session['email'] = email 
+    else:
+
+        conn = mysql.connection
+        cur = conn.cursor()
+        query = "SELECT count(*)FROM `customer` WHERE email = '%s' and password = '%s'" % (email,password)
+
+        cur.execute(query)
+
+        result = cur.fetchall()
+
+        if ('1' in str(result)):
+            session['logged_in'] = True
+            session['type'] = "Customer"
+            session['email'] = email 
         
     return redirect('/')
 

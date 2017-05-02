@@ -17,7 +17,7 @@
 
 	    {% if session['logged_in'] %}
 	    <p style="color:white" >You're logged in {{session['email']}}!</p>
-
+	    <a href="/logout"> Log out </a>
 	    {% endif %}
 	</div>
     </nav>
@@ -34,6 +34,7 @@
 
 	    <h1>{{session['type']}} Profile </h1>
 
+	    {% if session['type'] == 'Customer' %}
 	    <h1>Name</h1>
 	    <div class="col-lg-4" style="width:50%; padding-left:5%">
 		<div class="form-group" >
@@ -98,6 +99,13 @@
 
 
 		<button type="submit" class="btn btn-default">Save Settings</button>
+
+		{% elif session['type'] == 'Booking Agent' %}
+
+		<h2> Email: {{d[0]}} </h2>
+		<h2> Booking_Agent_id: {{d[1]}} </h2>
+		
+		{% endif %}
 	    </div>
 	</form>
     </div>
