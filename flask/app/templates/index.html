@@ -37,6 +37,7 @@
 	    {% if session['logged_in'] %}
 	    <p style="color:white" >You're logged in {{session['email']}}!</p>
 
+	    <a href="/profile"> Profile </a>
 	    {% else %}
 
 	    <div id="navbar" class="navbar-collapse collapse" style = "margin-top:5px; margin-bottom:-30px">
@@ -104,6 +105,7 @@
 	
 	<script type="text/javascript">
 	 $(function () {
+	     $('#datetimepickerarrive').datepicker();
 	     $('#datetimepickerdepart').datepicker();
 	 });
 	</script>

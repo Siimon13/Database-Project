@@ -52,17 +52,28 @@ def signUp():
             cur.execute(insertquery)
             conn.commit()
             session['logged_in'] = True
+            session['type'] = "Customer"
             session['email'] = email 
             print insertquery
                 
         return redirect('/profile')
 
-@app.route('/logIn', methods = ['GET'])
-def logIn():
-    return redirect('profile.html', code = 307)
-
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    if not session.get('logged_in'):
+        return redirect('/')
+    else:
+        email = session['email'];
+        conn = mysql.connection
+        cur = conn.cursor()
+        query = "SELECT * FROM `customer` WHERE email = '%s'" % (email)
+
+        cur.execute(query)
+
+        result = cur.fetchall()
+        print str(result)
+    
+    
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -76,8 +87,16 @@ def profile():
         passport_expiration = request.form.get('passport_expiration')
         passport_country = request.form.get('passport_country')
         dob = request.form.get('dob')
-    
-    return render_template('profile.html')
+
+        updatequery = "UPDATE customer set email='%s', password='%s', name='%s', building_number='%s', street='%s', city = '%s', state='%s', phone_number='%s', passport_number='%s', passport_expiration='%s', passport_country='%s', date_of_birth='%s' where email = '%s'" % (email, password, name, building_num, street, city, state, phone_number, passport_number, passport_expiration, passport_country, dob, email)
+        conn = mysql.connection
+        cur = conn.cursor()
+
+        cur.execute(updatequery)
+        conn.commit()
+        return redirect('/profile')
+        
+    return render_template('profile.html', data=result)
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -94,6 +113,7 @@ def login():
 
     if ('1' in str(result)):
         session['logged_in'] = True
+        session['type'] = "Customer"
         session['email'] = email 
         
     return redirect('/')
