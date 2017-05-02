@@ -12,12 +12,9 @@
 	<div class="container" >
 
 	    <div class="navbar-header" style = "margin-top:30px; margin-bottom:-30px">
-        	<a class = "navbar-brand" style = "height:100px; font-size:50px; " href = "/">Against United</a>
+        	<a class = "navbar-brand" style = "height:100px; font-size:50px; " href = "">Against United</a>
 	    </div>
-
-	    {% if session['logged_in'] %}
-	    <p style="color:white" >You're logged in {{session['email']}}!</p>
-	    {% endif %}
+	    	    
 	</div>
     </nav>
 
@@ -32,10 +29,7 @@
 	<!-- <h1> {{d[0]}} </h1> -->
 	{% endfor %}
 	
-	<form style="padding-top:3%; width: 50%; text-align:center;" method="POST" action="/profile ">
-
-
-	    <h1>Name</h1>
+	<form style="padding-top:3%; width: 50%; text-align:center;" method="POST" action="/ ">
 	    <div class="col-lg-4 col-lg-offset-4">
 		<div class="form-group">
 		    <label for="exampleInputEmail1">Email address</label>
