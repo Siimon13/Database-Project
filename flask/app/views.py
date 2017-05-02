@@ -54,17 +54,12 @@ def signUp():
             session['logged_in'] = True
             session['email'] = email 
             print insertquery
+                
+        return redirect('/profile')
 
-<<<<<<< HEAD
 @app.route('/logIn', methods = ['GET'])
 def logIn():
     return redirect('profile.html', code = 307)
-=======
-                
-        return redirect('/profile')
-#@app.route('/logIn', methods = ['GET'])
-#def logIn():
-#use a redirect here to redirect to profile or something
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -83,7 +78,6 @@ def profile():
         dob = request.form.get('dob')
     
     return render_template('profile.html')
->>>>>>> master
 
 @app.route('/search', methods = ['GET'])
 def search():
@@ -104,8 +98,5 @@ def search():
     data = jsonify(result)
 
     print("RESULT: " + str(result))
-<<<<<<< HEAD
+
     return render_template('flights.html', data = result)
-=======
-    return render_template('flights.html', data = result)
->>>>>>> master
