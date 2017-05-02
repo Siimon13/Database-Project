@@ -79,7 +79,26 @@ def profile():
     
     return render_template('profile.html')
 
-@app.route('/search', methods = ['GET'])
+@app.route('/login', methods = ['POST', 'GET'])
+def login():
+    email = request.form['email']
+    password = request.form['password']
+
+    conn = mysql.connection
+    cur = conn.cursor()
+    query = "SELECT count(*)FROM `customer` WHERE email = '%s' and password = '%s'" % (email,password)
+
+    cur.execute(query)
+
+    result = cur.fetchall()
+
+    if ('1' in str(result)):
+        session['logged_in'] = True
+        session['email'] = email 
+        
+    return redirect('/')
+
+@app.route('/search', methods = ['POST'])
 def search():
     _sourceCity = request.form['from']
     _destination = request.form['to']
@@ -88,7 +107,7 @@ def search():
     _date = request.form['date']
 
     conn = mysql.connection
-    cur - mysql.connection.cursor()
+    cur = conn.cursor()
 
     query = "SELECT flight_num, airline_name, price FROM `flight` as `f` WHERE f.departure_airport in (SELECT f1.departure_airport FROM `flight` as `f1`natural join `airport` WHERE f1.departure_airport = airport.airport_name AND f1.departure_airport = _departairport AND airport.city = _sourceCity) AND f.arrival_airport in (SELECT f2.arrival_airport FROM `flight` as `f2` natural join `airport` WHERE f2.arrival_airport = airport.airport_name AND f2.arrival_airport = _arrairport AND airport.city = _destination) AND f.departure_time = _date;"
 

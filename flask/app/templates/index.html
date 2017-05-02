@@ -30,23 +30,29 @@
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container" >
-
 	    <div class="navbar-header" style = "margin-top:30px; margin-bottom:-30px">
         	<a class = "navbar-brand" style = "height:100px; font-size:50px; " href = "">Against United</a>
 	    </div>
+
+	    {% if session['logged_in'] %}
+	    <p style="color:white" >You're logged in {{session['email']}}!</p>
+
+	    {% else %}
+
 	    <div id="navbar" class="navbar-collapse collapse" style = "margin-top:5px; margin-bottom:-30px">
-        	<form class = "navbar-form navbar-right"  action = "/logIn" method = "GET">
+        	<form class = "navbar-form navbar-right"  action = "/login" method = "POST">
         	    <div class = "form-group">
-        		<input type = "text" placeholder = "Email" class = "form-control">
+        		<input type = "text" placeholder = "Email" class = "form-control" name="email">
         	    </div>
         	    <div class = "form-group">
-        		<input type = "password" placeholder = "Password" class = "form-control">
+        		<input type = "password" placeholder = "Password" class = "form-control" name="password">
         	    </div>
         	    <button type = "submit" class = "btn btn-succss" style = "background-color: #5cb85c; color:white">Sign in</button>
 		    <p style = "color:white; display:inline-block;">or</p>
 		    <a class = "btn btn-success" href = "showSignUp" style = "background-color: #5cb85c; color:white; " >Sign Up</a>
 		    
         	</form>
+		{% endif %}
 	    </div>
 	    <!-- <div style = "float:right; margin-right:200px;">
 		 <p style = "color:white; display:inline-block;">or</p>
@@ -60,7 +66,7 @@
 
     <div class="row">
 	
-	<form class="form-inline" action="/search" method="GET" style="padding-top:5%; text-align: center;">
+	<form class="form-inline" action="/search" method="POST" style="padding-top:5%; text-align: center;">
 	    <div class="form-group">
 		<input type="text" placeholder="From" name="from">
 	    </div>
