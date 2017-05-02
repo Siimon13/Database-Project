@@ -54,12 +54,12 @@ def signUp():
             session['logged_in'] = True
             session['email'] = email 
             print insertquery
-
                 
         return redirect('/profile')
-#@app.route('/logIn', methods = ['GET'])
-#def logIn():
-#use a redirect here to redirect to profile or something
+
+@app.route('/logIn', methods = ['GET'])
+def logIn():
+    return redirect('profile.html', code = 307)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -117,4 +117,5 @@ def search():
     data = jsonify(result)
 
     print("RESULT: " + str(result))
+
     return render_template('flights.html', data = result)
