@@ -26,20 +26,28 @@
 <body>
     {% for d in data %}
     <div class="row" style="text-align:center;">
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
     	<table>
 	    <tr>
+		<th>Airline</th>
 		<th>Flight Number</th>
 		<th>Departure Airport</th>
 		<th>Departure Time</th>
-		<th>Arrival Airport</th>
 		<th>Arrival Time</th>
 		<th>Price</th>
 		<th>Status</th>
+		<th>Airplane Number </th>
 	    </tr>
 
 	    {% for r in data  %}
 	    
 	    <tr>
+		<th>{{r[0]}}</th>
 		<th>{{r[1]}}</th>
 		<th>{{r[2]}}</th>
 		<th>{{r[3]}}</th>
@@ -47,7 +55,6 @@
 		<th>{{r[5]}}</th>
 		<th>{{r[6]}}</th>
 		<th>{{r[7]}}</th>
-		<th>{{r[8]}}</th>
 	    </tr>
 	    
 	    {% endfor %}
