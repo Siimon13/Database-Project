@@ -262,10 +262,15 @@ def viewflights():
     
     result = cur.fetchall()
 
+    print result
     return render_template('viewflights.html', data = result)
 
 @app.route('/addairplanes', methods=['POST', 'GET'])
 def addairplanes():
+    if not session['logged_in'] == True and not session['Type'] == 'Staff':
+        session['message'] = "Login with your staff account"
+        return redirect('/')
+
     if request.method == 'POST':
         airplane_id = request.form.get('airplane_id')
         seats = request.form.get('seats')
@@ -281,6 +286,10 @@ def addairplanes():
 
 @app.route('/addairport', methods=['POST', 'GET'])
 def addairport():
+    if not session['logged_in'] == True and not session['Type'] == 'Staff':
+        session['message'] = "Login with your staff account"
+        return redirect('/')
+
     if request.method == 'POST':
         airport_name = request.form.get('airport_name')
         airport_city = request.form.get('airport_city')
@@ -294,8 +303,12 @@ def addairport():
     
     return render_template('addairport.html')
 
-@app.route('/addflights')
+@app.route('/addflights', methods=['POST', 'GET'])
 def addflights():
+    if not session['logged_in'] == True and not session['Type'] == 'Staff':
+        session['message'] = "Login with your staff account"
+        return redirect('/')
+
     conn = mysql.connection
     cur = conn.cursor()
 
@@ -316,6 +329,11 @@ def addflights():
         price = request.form.get('price')
         airplane_id = request.form.get('airplane_id')
         
-        insertquery = "insert into `flight` values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s, '%s');" % (session['airline'], flight_num, departure_airport, departure_time, arrival_airport, arrival_time, price, 'upcoming', airplane_id)
+        insertquery = "insert into `flight` values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');" % (session['airline'], flight_num, departure_airport, departure_time, arrival_airport, arrival_time, price, 'upcoming ', airplane_id)
         
+        print insertquery
+        
+        cur.execute(insertquery)
+        conn.commit()
+
     return render_template('addflights.html', airports = airports, airplanes = airplanes)

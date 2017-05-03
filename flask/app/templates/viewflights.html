@@ -18,13 +18,49 @@
 	    {% if session['logged_in'] %}
 	    <p style="color:white" >You're logged in {{session['email']}}!</p>
 	    <a href="/logout"> Log out </a>
+	    <a href="/profule"> Profile </a>
 	    {% endif %}
 	</div>
     </nav>
 
 </head>
+
 <body>
-    
-        
+    <div class="row" stlye="padding-left:50%; padding-top:50%;">
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<h1>Flights for {{session['airline']}}</h1>
+	<table>
+	    <tr>
+		<th>Flight Number</th>
+		<th>Departure Airport</th>
+		<th>Departure Time</th>
+		<th>Arrival Airport</th>
+		<th>Arrival Time</th>
+		<th>Price</th>
+		<th>Status</th>
+	    </tr>
+
+	    {% for r in data  %}
+	    
+	    <tr>
+		<th>{{r[1]}}</th>
+		<th>{{r[2]}}</th>
+		<th>{{r[3]}}</th>
+		<th>{{r[4]}}</th>
+		<th>{{r[5]}}</th>
+		<th>{{r[6]}}</th>
+		<th>{{r[7]}}</th>
+		<th>{{r[8]}}</th>
+	    </tr>
+	    
+	    {% endfor %}
+	    
+	</table>
+    </div>
 </body>
+
 </html>

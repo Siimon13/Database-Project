@@ -27,7 +27,7 @@
 <body>
 
     <div class="row" style="text-align:center;">
-	<form style="padding-top:8%;  text-align:center;" method="POST" action="/profile ">
+	<form style="padding-top:8%;  text-align:center;" method="POST" action="/addflights ">
 
 	    <h1>Add Flight for {{session['airline']}}</h1>
 	    
@@ -38,10 +38,10 @@
 		</div>
 
 		<div class="form-group" >
-		    <select class="form-control">
-			<label for="exampleInputFlightNum">Departure Airport</label>
+		    <label for="exampleInputFlightNum">Departure Airport</label>
+		    <select class="form-control" name ="departure_airport">
 			{% for airport in airports  %}
-			<option name ="departure_airport" value="{{airport[0]}}">{{airport[0]}}</option>
+			<option  value="{{airport[0]}}">{{airport[0]}}</option>
 			{% endfor %}
 			
 		    </select>
@@ -53,10 +53,10 @@
 		</div>
 
 		<div class="form-group" >
-		    <select class="form-control">
-			<label for="exampleInputFlightNum">Arrival Airport</label>
+		    <label for="exampleInputFlightNum">Arrival Airport</label>
+		    <select class="form-control" name ="arrival_airport">
 			{% for airport in airports  %}
-			<option name ="arrival_airport" value="{{airport[0]}}">{{airport[0]}}</option>
+			<option  value="{{airport[0]}}">{{airport[0]}}</option>
 			{% endfor %}
 			
 		    </select>
@@ -74,10 +74,10 @@
 
 		<div class="form-group" >
 		    <label for="exampleInputFlightNum">Airplane ID</label>
-		    <select class="form-control">
+		    <select class="form-control" name ="airplane_id">
 			
 			{% for airplane in airplanes  %}
-			<option name ="airplane_id" value="{{airplane[0]}}">{{airplane[0]}}</option>
+			<option  value="{{airplane[0]}}">{{airplane[0]}}</option>
 			{% endfor %}
 		    </select>
 		</div>
