@@ -18,7 +18,7 @@
 	    {% if session['logged_in'] %}
 	    <p style="color:white" >You're logged in {{session['email']}}!</p>
 	    <a href="/logout"> Log out </a>
-	    <a href="/profule"> Profile </a>
+	    <a href="/profile"> Profile </a>
 	    {% endif %}
 	</div>
     </nav>
@@ -26,12 +26,8 @@
 </head>
 
 <body>
-    <div class="row" style="padding-left:50%; padding-top:50%;">
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
+    <div class="row" style="padding-left:50%; padding-top:10%;">
+	{% if session['type'] == 'Staff'  %}
 	<h1>Flights for {{session['airline']}}</h1>
 	<table>
 	    <tr>
@@ -58,9 +54,70 @@
 	    </tr>
 	    
 	    {% endfor %}
-	    
+
 	</table>
+	{% elif session['type'] == 'Customer'  %}
+	<table>
+	    <tr>
+		<th> Airline </th>
+		<th>Flight Number</th>
+		<th>Departure Airport</th>
+		<th>Departure Time</th>
+		<th>Arrival Airport</th>
+		<th>Arrival Time</th>
+		<th>Price</th>
+		<th>Status</th>
+	    </tr>
+
+	    {% for r in data  %}
+	    
+	    <tr>
+		<th>{{r[0]}} </th>
+		<th>{{r[1]}}</th>
+		<th>{{r[2]}}</th>
+		<th>{{r[3]}}</th>
+		<th>{{r[4]}}</th>
+		<th>{{r[5]}}</th>
+		<th>{{r[6]}}</th>
+		<th>{{r[7]}}</th>
+		<th>{{r[8]}}</th>
+	    </tr>
+	    
+	    {% endfor %}
+
+	    {% elif session['type'] == 'Booking Agent'  %}
+	    <table>
+		<tr>
+		    <th> Airline </th>
+		    <th>Flight Number</th>
+		    <th>Departure Airport</th>
+		    <th>Departure Time</th>
+		    <th>Arrival Airport</th>
+		    <th>Arrival Time</th>
+		    <th>Price</th>
+		    <th>Status</th>
+		    <th>Email</th>
+		</tr>
+
+		{% for r in data  %}
+		
+		<tr>
+		    <th>{{r[0]}} </th>
+		    <th>{{r[1]}}</th>
+		    <th>{{r[2]}}</th>
+		    <th>{{r[3]}}</th>
+		    <th>{{r[4]}}</th>
+		    <th>{{r[5]}}</th>
+		    <th>{{r[6]}}</th>
+		    <th>{{r[7]}}</th>
+		    <th>{{r[8]}}</th>
+		    <th>{{r[10]}}</th>
+		</tr>
+		
+		{% endfor %}
+
+	    </table>
+	    {% endif  %}
     </div>
 </body>
-
 </html>

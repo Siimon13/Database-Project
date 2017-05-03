@@ -35,7 +35,7 @@
 	    <h1>{{session['type']}} Profile </h1>
 
 	    {% if session['type'] == 'Customer' %}
-	    <h1>Name</h1>
+	    <a href="/viewflights" class="btn btn-default">View Flights</a>
 	    <div class="col-lg-4" style="width:50%; padding-left:5%">
 		<div class="form-group" >
 		    <label for="exampleInputEmail1">Email address</label>
@@ -105,7 +105,8 @@
 
 	<h2> Email: {{d[0]}} </h2>
 	<h2> Booking_Agent_id: {{d[1]}} </h2>
-
+	<a href="/viewflights" class="btn btn-default">View Flights</a>
+	
 	{% elif session['type'] == 'Staff' %}
 
 	<h2> First Name: {{d[2]}}</h2>

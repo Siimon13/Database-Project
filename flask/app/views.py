@@ -272,7 +272,7 @@ def viewflights():
         session['message'] = "Login with your account"
         return redirect('/')
 
-    if session['Type'] == 'Staff':
+    if session['type'] == 'Staff':
         session['message'] = ""
         conn = mysql.connection
         cur = conn.cursor()
@@ -282,21 +282,30 @@ def viewflights():
     
         result = cur.fetchall()
 
-    elif session['Type'] == 'Customer':
+    elif session['type'] == 'Customer':
         session['message'] = ""
         conn = mysql.connection
         cur = conn.cursor()
-        query = "SELECT * FROM `flights` WHERE flight_num IN (SELECT flight_num FROM `ticket` natural join `purchases` WHERE puchases.customer_email = '%s')" %(session['email'])
+        query = "SELECT * FROM `flight` WHERE flight_num IN (SELECT flight_num FROM `ticket` natural join `purchases` WHERE purchases.customer_email = '%s')" %(session['email'])
 
         cur.execute(query)
     
         result = cur.fetchall()
-
-    if session['Type'] == 'Booking Agent':
+        print result
+        
+    elif session['type'] == 'Booking Agent':
         session['message'] = ""
         conn = mysql.connection
         cur = conn.cursor()
-        query = "SELECT *, customer.email FROM `flights`, 'customer' WHERE flight_num, customer.email IN (SELECT ticket.flight_num, purchases.customer_email FROM `ticket` natural join `purchases` WHERE puchases.booking_agent_id = '%s')" %(session['booking_agent_id'])
+
+        agent_query = "select booking_agent_id from booking_agent where email = '%s'" % session['email']
+
+        cur.execute(agent_query)
+        
+        booking_agent_id = cur.fetchall()[0][0]
+
+        
+        query = "SELECT flight.*,customer.email FROM flight, customer WHERE flight.flight_num IN (SELECT ticket.flight_num FROM `ticket` natural join `purchases` WHERE purchases.booking_agent_id = '%s') and customer.email IN (SELECT purchases.customer_email FROM `purchases` WHERE purchases.booking_agent_id = '%s')" % (booking_agent_id, booking_agent_id)
 
         cur.execute(query)
     
