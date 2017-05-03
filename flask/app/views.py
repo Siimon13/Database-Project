@@ -227,23 +227,21 @@ def login():
 
 @app.route('/search', methods = ['POST'])
 def search():
-    _sourceCity = request.form.get('from')
-    _destination = request.form.get('to')
-    _departairport = request.form('departairport')
-    _arrairport = request.form.get('arrairport')
-    _date = request.form.get('date')
+    sourceCity = request.form.get('from')
+    destination = request.form.get('to')
+    departairport = request.form.get('departairport')
+    arrairport = request.form.get('arrairport')
+    date = request.form.get('date')
 
     conn = mysql.connection
     cur = conn.cursor()
 
-    query = "SELECT * FROM `flight` as `f` WHERE f.departure_airport in (SELECT f1.departure_airport FROM `flight` as `f1`natural join `airport` WHERE f1.departure_airport = airport.airport_name AND f1.departure_airport = _departairport AND airport.city = _sourceCity) AND f.arrival_airport in (SELECT f2.arrival_airport FROM `flight` as `f2` natural join `airport` WHERE f2.arrival_airport = airport.airport_name AND f2.arrival_airport = _arrairport AND airport.city = _destination) AND f.departure_time = _date;"
+    query = "SELECT * FROM `flight` as `f` WHERE f.departure_airport in (SELECT f1.departure_airport FROM `flight` as `f1`natural join `airport` WHERE f1.departure_airport = airport.airport_name AND f1.departure_airport = '%s' AND airport.airport_city = '%s') AND f.arrival_airport in (SELECT f2.arrival_airport FROM `flight` as `f2` natural join `airport` WHERE f2.arrival_airport = airport.airport_name AND f2.arrival_airport = '%s' AND airport.airport_city = '%s') AND f.departure_time = '%s';" % (departairport, sourceCity, arrairport, destination, date)
 
     cur.execute(query)
 
     result = cur.fetchall()
     data = jsonify(result)
-
-    print("RESULT: " + str(result))
 
     return render_template('flights.html', data = result)
 
