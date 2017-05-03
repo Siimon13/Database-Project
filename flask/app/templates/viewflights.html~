@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+    <link rel = "stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container" >
+
+	    <div class="navbar-header" style = "margin-top:30px; margin-bottom:-30px">
+        	<a class = "navbar-brand" style = "height:100px; font-size:50px; " href = "/">Against United</a>
+	    </div>
+
+	    {% if session['logged_in'] %}
+	    <p style="color:white" >You're logged in {{session['email']}}!</p>
+	    <a href="/logout"> Log out </a>
+	    {% endif %}
+	</div>
+    </nav>
+
+</head>
+<body>
+
+
+    {% for d in data %}
+
+
+    <div class="row" style="text-align:center;">
+	<form style="padding-top:8%;  text-align:center;" method="POST" action="/profile ">
+
+	    <h1>{{session['type']}} Profile </h1>
+
+	    {% if session['type'] == 'Customer' %}
+	    <h1>Name</h1>
+	    <div class="col-lg-4" style="width:50%; padding-left:5%">
+		<div class="form-group" >
+		    <label for="exampleInputEmail1">Email address</label>
+		    <input type="email" class="form-control" name="email" id="email" value='{{d[0]}}''>
+		</div>
+		
+		<div class="form-group">
+		    <label for="exampleInputPassword1">Password</label>
+		    <input type="password" class="form-control" name="password" id="password" value='{{d[2]}}''>
+		</div>
+		
+		<div class="form-group">
+		    <label for="exampleInputName1">Name</label>
+		    <input type="text" class="form-control" name="name" id="name" value='{{d[1]}}''>
+		</div>
+		
+		<div class="form-group">
+		    <label for="exampleInputBuildingNum1">Building Number</label>
+		    <input type="text" class="form-control" name="building_num" id="building_num" value='{{d[3]}}''>
+		</div>
+
+		<div class="form-group">
+		    <label for="exampleInputStreet1">Street</label>
+		    <input type="text" class="form-control" name="street" id="street" value='{{d[4]}}'>
+		</div>
+
+		<div class="form-group">
+		    <label for="exampleInputCity1">City</label>
+		    <input type="text" class="form-control" name="city" id="city" value='{{d[5]}}'>
+		</div>
+		
+		<div class="form-group">
+		    <label for="exampleInputState1">State</label>
+		    <input type="text" class="form-control" name="state" id="state" value='{{d[6]}}'>
+		</div>
+		
+		<div class="form-group">
+		    <label for="exampleInputPhoneNum">Phone Number</label>
+		    <input type="text" class="form-control" name="phone_number" id="phone_number" value='{{d[7]}}'>
+		</div>
+
+		<div class="form-group">
+		    <label for="exampleInputPassportNum">Passport Number</label>
+		    <input type="text" class="form-control" name="passport_number" id="passport_number" value='{{d[8]}}'>
+		</div>
+
+		<div class="form-group">
+		    <label for="exampleInputPassportExpiration">Passport Expiration</label>
+		    <input type="text" class="form-control" name="passport_expiration" id="passport_expiration" value='{{d[9]}}'>
+		</div>
+
+		<div class="form-group">
+		    <label for="exampleInputPassportCountry">Passport Country</label>
+		    <input type="text" class="form-control" name="passport_country" id="passport_country" value='{{d[10]}}'>
+		</div>
+
+		<div class="form-group">
+		    <label for="exampleInputPassportCountry">Date of Birth</label>
+		    <input type="text" class="form-control" name="dob" id="dob" value='{{d[11]}}'>
+		</div>
+
+
+		<button type="submit" class="btn btn-default">Save Settings</button>
+
+		{% elif session['type'] == 'Booking Agent' %}
+
+		<h2> Email: {{d[0]}} </h2>
+		<h2> Booking_Agent_id: {{d[1]}} </h2>
+
+		{% elif session['type'] == 'Staff' %}
+
+		<h2> First Name: {{d[2]}}</h2>
+		<h2> Last Name: {{d[3]}}</h2>
+		<h2> Airline: {{d[5]}}</h2>
+
+		<a href="/viewflights"><button type="submit" class="btn btn-default">View Flights</button></a>
+		<a href="/addflights"><button type="submit" class="btn btn-default">Add Flights</button></a>
+		<a href="/changeflights"><button type="submit" class="btn btn-default">Change Flight Status</button></a>
+		<a href="/addairplanes"><button type="submit" class="btn btn-default">Add Airplanes</button></a>
+		<a href="/addairport"><button type="submit" class="btn btn-default">Add Airport</button></a>
+		<a href="/viewbookingagent"><button type="submit" class="btn btn-default">View Booking Agent</button></a>
+		<a href="/viewcustomer"><button type="submit" class="btn btn-default">View customers</button></a>
+		<a href="/viewcustomer"><button type="submit" class="btn btn-default">View Report</button></a>
+		
+		{% endif %}
+	    </div>
+	</form>
+    </div>
+    {% endfor %}
+
+    
+</body>
+</html>
