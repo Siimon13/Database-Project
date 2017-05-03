@@ -29,6 +29,9 @@
 	{% for d in data %}
 	<h1> {{d[0]}} {{d[1]}}</h1> 
 	{% endfor %}
+	{% if len(d) == 0%}
+	<h1>Can't Find Fights </h1>
+	{% endif %}
     </div>
 </body>
 </html>

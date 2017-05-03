@@ -227,11 +227,11 @@ def login():
 
 @app.route('/search', methods = ['POST'])
 def search():
-    _sourceCity = request.form['from']
-    _destination = request.form['to']
-    _departairport = request.form['departairport']
-    _arrairport = request.form['arrairport']
-    _date = request.form['date']
+    _sourceCity = request.form.get('from')
+    _destination = request.form.get('to')
+    _departairport = request.form('departairport')
+    _arrairport = request.form.get('arrairport')
+    _date = request.form.get('date')
 
     conn = mysql.connection
     cur = conn.cursor()
