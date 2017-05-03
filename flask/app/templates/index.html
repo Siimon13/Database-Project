@@ -99,7 +99,7 @@
     </form>
 
     
-    <form class="form-inline" action="/search_status" method="POST" style="padding-top:5%; text-align: center;">
+    <form class="form-inline" action="/search_stats" method="POST" style="padding-top:5%; text-align: center;">
     	<h1> {{session['message']}} </h1>
     	<div class="form-group">
 		<input type="text" placeholder="flight number" name="flight_num">
@@ -107,7 +107,7 @@
 
 	    <div class="form-group">
 		<div class='input-group date' id='datetimepickerdepart'>
-		    <input type='text' class="form-control" name = "date">
+		    <input type='text' class="form-control" name = "arrival_date">
 		    <span class="input-group-addon">
 			<span class="glyphicon glyphicon-calendar"></span>
 		    </span>
@@ -116,7 +116,7 @@
 
 	    <div class="form-group">
 		<div class='input-group date' id='datetimepickerdepart'>
-		    <input type='text' class="form-control" name = "date">
+		    <input type='text' class="form-control" name = "departure_date">
 		    <span class="input-group-addon">
 			<span class="glyphicon glyphicon-calendar"></span>
 		    </span>
@@ -125,8 +125,6 @@
 
 	    <button type = "submit" class = "btn btn-succss" style = "background-color: #5cb85c; color:white">Find Flight</button>
     </form>
-    </div>
-
     
     <footer>
 

@@ -247,28 +247,32 @@ def search():
 
     return render_template('flights.html', data = result)
 
-@app.route('/search_status', methods = ['POST'])
-def searchStatus():
-    fn = request.form['flight_num']
-    arrival_date = request.form['arrival_date']
-    departure_date = request.form['departure_date']
+@app.route('/search_stats', methods = ['POST', 'GET'])
+def search_status():
+    if request.method == 'POST':
+        fn = request.form.get('flight_num')
+        arrival_date = request.form.get('arrival_date')
+        departure_date = request.form.get('departure_date')
 
-    conn = mysql.connection
-    cur = conn.cursor()
+        conn = mysql.connection
+        cur = conn.cursor()
 
-    query = "SELECT status FROM `flight` WHERE flight_num = fn AND arrival_time = arrival_date AND departure_time = departure_date"
+        query = "SELECT flight_num,status FROM `flight` WHERE flight_num = '%s' AND arrival_time = '%s' AND departure_time = '%s'" % (fn, arrival_date, departure_date)
+        print query
+        
+        cur.execute(query)
 
-    cur.execute(query)
+        result = cur.fetchall()
 
-    result = cur.fetchall()
-    return render_template('flight-status.html', data = result)
+        print result
+        return render_template('flight-status.html', data=result)
 
 @app.route('/viewflights')
 def viewflights():
     if not session['logged_in'] == True and not session['Type'] == 'Staff':
         session['message'] = "Login with your staff account"
         return redirect('/')
-    
+
     session['message'] = ""
     conn = mysql.connection
     cur = conn.cursor()

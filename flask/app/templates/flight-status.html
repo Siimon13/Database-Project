@@ -24,8 +24,11 @@
 
 </head>
 <body>
-    	<div class="row" style="text-align:center;">
-    		
-    	</div>
+    Hello World!!
+    <div class="row" style="text-align:center; padding-top:300px;">
+	{% for d in data %}
+	<h1> {{d[0]}} {{d[1]}}</h1> 
+	{% endfor %}
+    </div>
 </body>
 </html>
