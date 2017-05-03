@@ -360,23 +360,58 @@ def addflights():
 def purchase():
     from random import randint
     import datetime
-    today = datetime.date.today()
-    ticket_id = randint(0,999999)
+    if session['type'] == "Customer":
+        today = datetime.date.today()
+        ticket_id = randint(0,999999)
 
-    flight_num = request.args.get('flight_num')
-    airline_name = request.args.get('airline')
-    session['message'] = "You purchased flight %s" % flight_num
-    conn = mysql.connection
-    cur = conn.cursor()
-    
-    insertquery = "insert into ticket values('%s', '%s', '%s')" % (ticket_id, airline_name, flight_num)
-    cur.execute(insertquery)
-    conn.commit()
+        flight_num = request.args.get('flight_num')
+        airline_name = request.args.get('airline')
+        session['message'] = "You purchased flight %s" % flight_num
+        conn = mysql.connection
+        cur = conn.cursor()
 
-    insertpurchasequery = "insert into purchases values('%s', '%s', '%s', '%s')" % (ticket_id, session['email'], None, today)
-    print insertpurchasequery
-    cur.execute(insertpurchasequery)
-    conn.commit()
+        insertquery = "insert into ticket values('%s', '%s', '%s')" % (ticket_id, airline_name, flight_num)
+        cur.execute(insertquery)
+        conn.commit()
+
+        insertpurchasequery = "insert into purchases values('%s', '%s', '%s', '%s')" % (ticket_id, session['email'], None, today)
+        print insertpurchasequery
+        cur.execute(insertpurchasequery)
+        conn.commit()
+        
+    elif session['type'] == "Booking Agent":
+        today = datetime.date.today()
+        ticket_id = randint(0,999999)
+
+        flight_num = request.args.get('flight_num')
+        airline_name = request.args.get('airline')
+        customer_email = request.args.get('customer_email').replace("%40","@")
+
+        conn = mysql.connection
+        cur = conn.cursor()
+
+        session['message'] = "You purchased flight %s for %s" % (flight_num, customer_email)
+
+        agent_query = "select booking_agent_id from booking_agent where email = '%s'" % session['email']
+
+        cur.execute(agent_query)
+        
+        booking_agent_id = cur.fetchall()[0][0]
+        
+        print booking_agent_id
+        
+        insertquery = "insert into ticket values('%s', '%s', '%s')" % (ticket_id, airline_name, flight_num)
+
+        print insertquery
+        
+        cur.execute(insertquery)
+        conn.commit()
+
+        insertpurchasequery = "insert into purchases values('%s', '%s', '%s', '%s')" % (ticket_id, customer_email, booking_agent_id, today)
+        cur.execute(insertpurchasequery)
+        conn.commit()
+
+        print insertpurchasequery
         
     return redirect('/')
     

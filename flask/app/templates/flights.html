@@ -56,9 +56,21 @@
 		<th>{{r[6]}}</th>
 		<th>{{r[7]}}</th>
 		
-		{% if session['logged_in']  %}
+		{% if session['logged_in'] and session['type'] == 'Customer'  %}
 		<th><a href="purchase?flight_num={{r[1]}}&airline={{r[0]}}"> Purchase</a> </th>
 		{% endif  %}
+
+		{% if session['logged_in'] and session['type'] == 'Booking Agent'  %}
+		<form method="GET" action="/purchase?flight_num={{r[1]}}&airline={{r[0]}}">
+		    <input type="text" placeholder="Customer Email" name="airline" value="{{r[0]}}" style="display:none">
+		    <input type="text" placeholder="Customer Email" name="flight_num" value="{{r[1]}}" style="display:none">
+		    <input type="text" placeholder="Customer Email" name="customer_email">
+		    <button type="submit"> Purchase </button>
+
+		</form>
+		{% endif  %}
+
+		    
 	    </tr>
 	    
 	    {% endfor %}
