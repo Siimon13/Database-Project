@@ -69,6 +69,7 @@
     <div class="row">
 	
 	<form class="form-inline" action="/search" method="POST" style="padding-top:5%; text-align: center;">
+	    <h1> {{session['message']}} </h1>
 	    <div class="form-group">
 		<input type="text" placeholder="From" name="from">
 	    </div>
@@ -87,14 +88,14 @@
 
 	    <div class="form-group">
 		<div class='input-group date' id='datetimepickerdepart'>
-                    <input type='text' class="form-control" name = "date">
-                    <span class="input-group-addon">
+		    <input type='text' class="form-control" name = "date">
+		    <span class="input-group-addon">
 			<span class="glyphicon glyphicon-calendar"></span>
-                    </span>
+		    </span>
 		</div>
 	    </div>
 	    
-            <button type = "submit" class = "btn btn-succss" style = "background-color: #5cb85c; color:white">Travel</button>
+	    <button type = "submit" class = "btn btn-succss" style = "background-color: #5cb85c; color:white">Travel</button>
     </form>
 
     

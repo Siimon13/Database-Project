@@ -117,7 +117,23 @@ def profile():
 
         result = cur.fetchall()
         print str(result)
-        
+
+    elif session['type'] == 'Staff':
+        email = session['email']
+
+        conn = mysql.connection
+        cur = conn.cursor()
+        query = "SELECT * FROM `airline_staff` WHERE username = '%s'" % (email)
+
+        cur.execute(query)
+
+        result = cur.fetchall()
+
+        session['airline'] = str(result[0][5])
+        print result[0][5]
+        print session['airline']
+        print str(result)
+
     else:
         email = session['email']
         conn = mysql.connection
@@ -156,6 +172,7 @@ def profile():
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
+    session['message'] = ""
     email = request.form['email']
     password = request.form['password']
 
@@ -170,8 +187,25 @@ def login():
         if ('1' in str(result)):
             session['logged_in'] = True
             session['type'] = "Booking Agent"
-            session['email'] = email 
+            session['email'] = email
+        else:
+            session['message'] = "Wrong Account Info"
+            
+    elif '@' not in email:
+        conn = mysql.connection
+        cur = conn.cursor()
+        query = "SELECT count(*)FROM `airline_staff` WHERE username = '%s' and password = '%s'" % (email,password)
 
+        cur.execute(query)
+
+        result = cur.fetchall()
+        if ('1' in str(result)):
+            session['logged_in'] = True
+            session['type'] = "Staff"
+            session['email'] = email
+
+        else:
+            session['message'] = "Do I need to call the cops?"
     else:
 
         conn = mysql.connection
@@ -186,7 +220,9 @@ def login():
             session['logged_in'] = True
             session['type'] = "Customer"
             session['email'] = email 
-        
+        else:
+            session['message'] = "Wrong Account Info"
+            
     return redirect('/')
 
 @app.route('/search', methods = ['POST'])
@@ -210,3 +246,76 @@ def search():
     print("RESULT: " + str(result))
 
     return render_template('flights.html', data = result)
+
+@app.route('/viewflights')
+def viewflights():
+    if not session['logged_in'] == True and not session['Type'] == 'Staff':
+        session['message'] = "Login with your staff account"
+        return redirect('/')
+    
+    session['message'] = ""
+    conn = mysql.connection
+    cur = conn.cursor()
+    query = "SELECT * FROM `flight` WHERE airline_name = '%s'" % (session['airline'])
+
+    cur.execute(query)
+    
+    result = cur.fetchall()
+
+    return render_template('viewflights.html', data = result)
+
+@app.route('/addairplanes', methods=['POST', 'GET'])
+def addairplanes():
+    if request.method == 'POST':
+        airplane_id = request.form.get('airplane_id')
+        seats = request.form.get('seats')
+        conn = mysql.connection
+        cur = conn.cursor()
+
+        insertquery = "insert into `airplane` values ('%s', '%s', '%s');" % (session['airline'], airplane_id, seats)
+        
+        cur.execute(insertquery)
+        conn.commit()
+        
+    return render_template('addairplanes.html')
+
+@app.route('/addairport', methods=['POST', 'GET'])
+def addairport():
+    if request.method == 'POST':
+        airport_name = request.form.get('airport_name')
+        airport_city = request.form.get('airport_city')
+        conn = mysql.connection
+        cur = conn.cursor()
+
+        insertquery = "insert into `airport` values ('%s', '%s');" % (airport_name, airport_city)
+        
+        cur.execute(insertquery)
+        conn.commit()
+    
+    return render_template('addairport.html')
+
+@app.route('/addflights')
+def addflights():
+    conn = mysql.connection
+    cur = conn.cursor()
+
+    airplanequery = "select airplane_id from airplane"
+    cur.execute(airplanequery)
+    airplanes = cur.fetchall()
+
+    airportquery = "select airport_name from airport"
+    cur.execute(airportquery)
+    airports = cur.fetchall()
+
+    if request.method == 'POST':
+        flight_num = request.form.get('flight_num')
+        departure_airport = request.form.get('departure_airport')
+        departure_time = request.form.get('departure_time')
+        arrival_airport = request.form.get('arrival_airport')
+        arrival_time = request.form.get('arrival_time')
+        price = request.form.get('price')
+        airplane_id = request.form.get('airplane_id')
+        
+        insertquery = "insert into `flight` values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s, '%s');" % (session['airline'], flight_num, departure_airport, departure_time, arrival_airport, arrival_time, price, 'upcoming', airplane_id)
+        
+    return render_template('addflights.html', airports = airports, airplanes = airplanes)

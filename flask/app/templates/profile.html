@@ -99,18 +99,34 @@
 
 
 		<button type="submit" class="btn btn-default">Save Settings</button>
-
-		{% elif session['type'] == 'Booking Agent' %}
-
-		<h2> Email: {{d[0]}} </h2>
-		<h2> Booking_Agent_id: {{d[1]}} </h2>
-		
-		{% endif %}
 	    </div>
 	</form>
+	{% elif session['type'] == 'Booking Agent' %}
+
+	<h2> Email: {{d[0]}} </h2>
+	<h2> Booking_Agent_id: {{d[1]}} </h2>
+
+	{% elif session['type'] == 'Staff' %}
+
+	<h2> First Name: {{d[2]}}</h2>
+	<h2> Last Name: {{d[3]}}</h2>
+	<h2> Airline: {{d[5]}}</h2>
+
+	<a href="/viewflights" class="btn btn-default">View Flights</a>
+	<a href="/addflights" class="btn btn-default">Add Flights</a>
+	<a href="/changeflights" class="btn btn-default">Change Flight Status</a>
+	<a href="/addairplanes" class="btn btn-default">Add Airplane</a>
+	<a href="/addairport" class="btn btn-default">Add Airport</a>
+	<a href="/viewbookingagent" class="btn btn-default">View Booking Agent</a>
+	<a href="/viewcustomer" class="btn btn-default">View Customers</a>
+	<a href="/viewreports" class="btn btn-default">View Report</a>
+	
+	{% endif %}
+	
+	
     </div>
     {% endfor %}
 
-    
+
 </body>
 </html>
