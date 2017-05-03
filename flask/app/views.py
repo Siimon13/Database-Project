@@ -468,4 +468,42 @@ def purchase():
         
     return redirect('/')
     
+@app.route('/viewbookingagent', methods=['GET'])
+def viewbookingagent():
+
+    # Top 5 booking agents
+    query = "select *,count(*) from booking_agent natural join purchases order by count(*) desc "
+    #Top 5 booking agents on cost
+    query = "SELECT booking_agent_id, flight_num, COUNT(flight_num) as num_count, price, price * COUNT(flight_num) * .1 FROM ticket natural join purchases natural join flight where booking_agent_id != 0 GROUP by booking_agent_id"
+     
+    cur.execute(insertpurchasequery)
+    conn.commit()
     
+    return render_template('viewbkagnt.html')
+
+@app.route('/viewcustomer', methods=['GET'])
+def viewcustomer():
+
+    # Top 5 booking agents
+    query = "select customer_email, count(customer_email) from purchases NATURAL join ticket GROUP by customer_email order by count(customer_email) desc"
+    #Top 5 booking agents on cost
+   
+    cur.execute(insertpurchasequery)
+    conn.commit()
+    
+    return render_template('viewcustomer.html')
+
+@app.route('/viewreports', methods=['GET'])
+def viewreports():
+
+    # Top 5 booking agents
+    query = "SELECT count(*), departure_time, arrival_time from purchases NATURAL JOIN ticket NATURAL JOIN flight"
+    #Top 5 booking agents on cost
+   
+    cur.execute(insertpurchasequery)
+    conn.commit()
+    
+    return render_template('viewreport.html')
+
+
+
