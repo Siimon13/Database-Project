@@ -248,7 +248,7 @@ def search():
     return render_template('flights.html', data = result)
 
 @app.route('/search_status', methods = ['POST'])
-def searchStatus()
+def searchStatus():
     fn = request.form['flight_num']
     arrival_date = request.form['arrival_date']
     departure_date = request.form['departure_date']
