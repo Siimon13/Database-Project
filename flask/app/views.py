@@ -236,7 +236,7 @@ def search():
     conn = mysql.connection
     cur = conn.cursor()
 
-    query = "SELECT flight_num, airline_name, price FROM `flight` as `f` WHERE f.departure_airport in (SELECT f1.departure_airport FROM `flight` as `f1`natural join `airport` WHERE f1.departure_airport = airport.airport_name AND f1.departure_airport = _departairport AND airport.city = _sourceCity) AND f.arrival_airport in (SELECT f2.arrival_airport FROM `flight` as `f2` natural join `airport` WHERE f2.arrival_airport = airport.airport_name AND f2.arrival_airport = _arrairport AND airport.city = _destination) AND f.departure_time = _date;"
+    query = "SELECT * FROM `flight` as `f` WHERE f.departure_airport in (SELECT f1.departure_airport FROM `flight` as `f1`natural join `airport` WHERE f1.departure_airport = airport.airport_name AND f1.departure_airport = _departairport AND airport.city = _sourceCity) AND f.arrival_airport in (SELECT f2.arrival_airport FROM `flight` as `f2` natural join `airport` WHERE f2.arrival_airport = airport.airport_name AND f2.arrival_airport = _arrairport AND airport.city = _destination) AND f.departure_time = _date;"
 
     cur.execute(query)
 
@@ -246,6 +246,22 @@ def search():
     print("RESULT: " + str(result))
 
     return render_template('flights.html', data = result)
+
+@app.route('/search_status', methods = ['POST'])
+def searchStatus()
+    fn = request.form['flight_num']
+    arrival_date = request.form['arrival_date']
+    departure_date = request.form['departure_date']
+
+    conn = mysql.connection
+    cur = conn.cursor()
+
+    query = "SELECT status FROM `flight` WHERE flight_num = fn AND arrival_time = arrival_date AND departure_time = departure_date"
+
+    cur.execute(query)
+
+    result = cur.fetchall()
+    return render_template('flight-status.html', data = result)
 
 @app.route('/viewflights')
 def viewflights():
