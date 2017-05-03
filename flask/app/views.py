@@ -267,18 +267,40 @@ def search_status():
 
 @app.route('/viewflights')
 def viewflights():
-    if not session['logged_in'] == True and not session['Type'] == 'Staff':
-        session['message'] = "Login with your staff account"
+    result = []
+    if not session['logged_in'] == True:
+        session['message'] = "Login with your account"
         return redirect('/')
 
-    session['message'] = ""
-    conn = mysql.connection
-    cur = conn.cursor()
-    query = "SELECT * FROM `flight` WHERE airline_name = '%s'" % (session['airline'])
+    if session['Type'] == 'Staff':
+        session['message'] = ""
+        conn = mysql.connection
+        cur = conn.cursor()
+        query = "SELECT * FROM `flight` WHERE airline_name = '%s'" % (session['airline'])
 
-    cur.execute(query)
+        cur.execute(query)
     
-    result = cur.fetchall()
+        result = cur.fetchall()
+
+    elif session['Type'] == 'Customer':
+        session['message'] = ""
+        conn = mysql.connection
+        cur = conn.cursor()
+        query = "SELECT * FROM `flights` WHERE flight_num IN (SELECT flight_num FROM `ticket` natural join `purchases` WHERE puchases.customer_email = '%s')" %(session['email'])
+
+        cur.execute(query)
+    
+        result = cur.fetchall()
+
+    if session['Type'] == 'Booking Agent':
+        session['message'] = ""
+        conn = mysql.connection
+        cur = conn.cursor()
+        query = "SELECT *, customer.email FROM `flights`, 'customer' WHERE flight_num, customer.email IN (SELECT ticket.flight_num, purchases.customer_email FROM `ticket` natural join `purchases` WHERE puchases.booking_agent_id = '%s')" %(session['booking_agent_id'])
+
+        cur.execute(query)
+    
+        result = cur.fetchall()
 
     print result
     return render_template('viewflights.html', data = result)
