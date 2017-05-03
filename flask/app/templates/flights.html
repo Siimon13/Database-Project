@@ -55,6 +55,10 @@
 		<th>{{r[5]}}</th>
 		<th>{{r[6]}}</th>
 		<th>{{r[7]}}</th>
+		
+		{% if session['logged_in']  %}
+		<th><a href="purchase?flight_num={{r[1]}}&airline={{r[0]}}"> Purchase</a> </th>
+		{% endif  %}
 	    </tr>
 	    
 	    {% endfor %}

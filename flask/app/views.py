@@ -355,3 +355,29 @@ def addflights():
         conn.commit()
 
     return render_template('addflights.html', airports = airports, airplanes = airplanes)
+
+@app.route('/purchase', methods=['GET'])
+def purchase():
+    from random import randint
+    import datetime
+    today = datetime.date.today()
+    ticket_id = randint(0,999999)
+
+    flight_num = request.args.get('flight_num')
+    airline_name = request.args.get('airline')
+    session['message'] = "You purchased flight %s" % flight_num
+    conn = mysql.connection
+    cur = conn.cursor()
+    
+    insertquery = "insert into ticket values('%s', '%s', '%s')" % (ticket_id, airline_name, flight_num)
+    cur.execute(insertquery)
+    conn.commit()
+
+    insertpurchasequery = "insert into purchases values('%s', '%s', '%s', '%s')" % (ticket_id, session['email'], None, today)
+    print insertpurchasequery
+    cur.execute(insertpurchasequery)
+    conn.commit()
+        
+    return redirect('/')
+    
+    
