@@ -356,6 +356,26 @@ def addflights():
 
     return render_template('addflights.html', airports = airports, airplanes = airplanes)
 
+@app.route('/changestatus', methods = ['GET'])
+def changeStatus():
+    if not session['logged_in'] == True and not session['Type'] == 'Staff':
+        session['message'] = "Login with your staff account"
+        return redirect('/')
+
+    conn = mysql.connection
+    cur = conn.cursor()
+
+    if request.method == 'GET':
+        flight_num = request.form.get('flight_num')
+        status = request.form.get('status')
+
+        query = "UPDATE `flight` set status = '%s' where flight_num = '%s'"(status, flight_num)
+
+        cur.execute(query)
+        conn.commit()
+
+    return render_template(template)
+
 @app.route('/purchase', methods=['GET'])
 def purchase():
     from random import randint
