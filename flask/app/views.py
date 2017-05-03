@@ -414,6 +414,7 @@ def purchase():
     from random import randint
     import datetime
     if session['type'] == "Customer":
+    
         today = datetime.date.today()
         ticket_id = randint(0,999999)
 
@@ -470,6 +471,8 @@ def purchase():
     
 @app.route('/viewbookingagent', methods=['GET'])
 def viewbookingagent():
+    import datetime
+    today = datetime.date.today()
 
     # Top 5 booking agents
     query = "select *,count(*) from booking_agent natural join purchases order by count(*) desc "
@@ -483,10 +486,12 @@ def viewbookingagent():
 
 @app.route('/viewcustomer', methods=['GET'])
 def viewcustomer():
+    import datetime
+    today = datetime.date.today()
 
     # Top 5 booking agents
     query = "select customer_email, count(customer_email) from purchases NATURAL join ticket GROUP by customer_email order by count(customer_email) desc"
-    #Top 5 booking agents on cost
+
    
     cur.execute(insertpurchasequery)
     conn.commit()
@@ -495,14 +500,21 @@ def viewcustomer():
 
 @app.route('/viewreports', methods=['GET'])
 def viewreports():
+    import datetime
+    today = datetime.date.today()
 
-    # Top 5 booking agents
-    query = "SELECT count(*), departure_time, arrival_time from purchases NATURAL JOIN ticket NATURAL JOIN flight"
+    #View reports
+    totalquery = "SELECT count(*), departure_time, arrival_time from purchases NATURAL JOIN ticket NATURAL JOIN flight WHERE departure_time >= DATE_SUB(NOW(),INTERVAL 1 YEAR)"
+
     #Top 5 booking agents on cost
-   
-    cur.execute(insertpurchasequery)
-    conn.commit()
+    monthquery = "SELECT count(*), departure_time, arrival_time from purchases NATURAL JOIN ticket NATURAL JOIN flight WHERE departure_time >= DATE_SUB(NOW(),INTERVAL 1 YEAR) GROUP BY MONTH(arrival_time)"
     
+    cur.execute(totalquery)
+    totalresult = cur.fetchall()
+
+    cur.execute(monthquery)
+    monthresult = cur.fetchall()
+
     return render_template('viewreport.html')
 
 
