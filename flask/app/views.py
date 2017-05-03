@@ -366,15 +366,17 @@ def changeStatus():
     cur = conn.cursor()
 
     if request.method == 'GET':
-        flight_num = request.form.get('flight_num')
-        status = request.form.get('status')
+        flight_num = request.args.get('flight_num')
+        status = request.args.get('status')
 
-        query = "UPDATE `flight` set status = '%s' where flight_num = '%s'"(status, flight_num)
-
+        query = "UPDATE `flight` set status = '%s' where flight_num = '%s' and airline_name = '%s'"  % (status, flight_num, session['airline'])
+        
+        print query
         cur.execute(query)
         conn.commit()
-
-    return render_template(template)
+        session['message'] = 'You changed flight %s to %s' % (flight_num, status) 
+        
+    return render_template("changestatus.html")
 
 @app.route('/purchase', methods=['GET'])
 def purchase():
