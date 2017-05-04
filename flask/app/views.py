@@ -265,6 +265,24 @@ def search_status():
         print result
         return render_template('flight-status.html', data=result)
 
+@app.route('/search_flight', methods = ['POST', 'GET'])
+def search_flight():
+    if request.method == 'POST':
+        fn = request.form.get('flight_num')
+
+        conn = mysql.connection
+        cur = conn.cursor()
+
+        query = "SELECT * FROM `flight` WHERE flight_num = '%s'" % fn
+        
+        cur.execute(query)
+
+        result = cur.fetchall()
+
+        print result
+        return render_template('flights.html', data=result)
+
+
 @app.route('/viewflights')
 def viewflights():
     result = []
@@ -474,23 +492,39 @@ def viewbookingagent():
     import datetime
     today = datetime.date.today()
 
-    # Top 5 booking agents
-    query = "select *,count(*) from booking_agent natural join purchases order by count(*) desc "
-    #Top 5 booking agents on cost
-    query = "SELECT booking_agent_id, flight_num, COUNT(flight_num) as num_count, price, price * COUNT(flight_num) * .1 FROM ticket natural join purchases natural join flight where booking_agent_id != 0 GROUP by booking_agent_id"
-     
-    cur.execute(insertpurchasequery)
-    conn.commit()
+    conn = mysql.connection
+    cur = conn.cursor()
     
-    return render_template('viewbkagnt.html')
+    # Top 5 booking agents
+    toponeyearquery = "select booking_agent_id,count(*) from booking_agent natural join purchases natural join ticket natural join flight WHERE departure_time >=DATE_SUB(NOW(),INTERVAL 1 YEAR) order by count(*) desc limit 5"
+    
+    toponemonthquery = "select booking_agent_id,count(*) from booking_agent natural join purchases natural join ticket natural join flight WHERE departure_time >=DATE_SUB(NOW(),INTERVAL 1 MONTH) order by count(*) desc limit 5"
+
+    #Top 5 booking agents on cost
+    topcommissonquery = "SELECT booking_agent_id, sum(b.commission) from (SELECT booking_agent_id, flight_num, COUNT(flight_num) as num_count, price, price * COUNT(flight_num) * .1 as commission FROM ticket natural join purchases natural join flight where booking_agent_id != 0 and departure_time >= DATE_SUB(NOW(),INTERVAL 1 YEAR) GROUP by flight_num limit 5) b GROUP by booking_agent_id ORDER BY sum(b.commission) desc"
+     
+    cur.execute(topcommissonquery)
+    commission = cur.fetchall()
+
+    cur.execute(toponeyearquery)
+    yearpurchase = cur.fetchall()
+
+    cur.execute(toponemonthquery)
+    monthpurchase = cur.fetchall()
+
+    return render_template('viewbookingagent.html', commission = commission, year = yearpurchase, month=monthpurchase)
 
 @app.route('/viewcustomer', methods=['GET'])
 def viewcustomer():
     import datetime
     today = datetime.date.today()
 
+    conn = mysql.connection
+    cur = conn.cursor()
+
+
     # Top 5 booking agents
-    query = "select customer_email, count(customer_email) from purchases NATURAL join ticket GROUP by customer_email order by count(customer_email) desc"
+    query = "select customer_email, count(customer_email) from purchases NATURAL join ticket GROUP by customer_email order by count(customer_email) desc limit 5"
 
    
     cur.execute(insertpurchasequery)
@@ -502,7 +536,10 @@ def viewcustomer():
 def viewreports():
     import datetime
     today = datetime.date.today()
-
+    
+    conn = mysql.connection
+    cur = conn.cursor()
+    
     #View reports
     totalquery = "SELECT count(*), departure_time, arrival_time from purchases NATURAL JOIN ticket NATURAL JOIN flight WHERE departure_time >= DATE_SUB(NOW(),INTERVAL 1 YEAR)"
 
@@ -515,7 +552,7 @@ def viewreports():
     cur.execute(monthquery)
     monthresult = cur.fetchall()
 
-    return render_template('viewreport.html')
+    return render_template('viewreport.html', total = totalresult, month = monthresult)
 
 
 

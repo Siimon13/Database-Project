@@ -96,12 +96,12 @@
 	    </div>
 	    
 	    <button type = "submit" class = "btn btn-succss" style = "background-color: #5cb85c; color:white">Travel</button>
-    </form>
+	</form>
 
-    
-    <form class="form-inline" action="/search_stats" method="POST" style="padding-top:5%; text-align: center;">
-    	<h1> {{session['message']}} </h1>
-    	<div class="form-group">
+	
+	<form class="form-inline" action="/search_stats" method="POST" style="padding-top:5%; text-align: center;">
+    	    <h1> {{session['message']}} </h1>
+    	    <div class="form-group">
 		<input type="text" placeholder="flight number" name="flight_num">
 	    </div>
 
@@ -124,17 +124,26 @@
 	    </div>
 
 	    <button type = "submit" class = "btn btn-succss" style = "background-color: #5cb85c; color:white">Find Flight</button>
-    </form>
-    
-    <footer>
+	</form>
+
+	<form class="form-inline" action="/search_flight" method="POST" style="padding-top:5%; text-align: center;">
+    	    <div class="form-group">
+		<input type="text" placeholder="flight number" name="flight_num">
+	    </div>
+
+	    <button type = "submit" class = "btn btn-succss" style = "background-color: #5cb85c; color:white">Find Flight</button>
+	</form>
 
 	
-	<script type="text/javascript">
-	 /* $(function () {
-	    $('#datetimepickerarrive').datepicker();
-	    $('#datetimepickerdepart').datepicker();
-	    });*/
-	</script>
+	<footer>
+
+	
+	    <script type="text/javascript">
+	     /* $(function () {
+		$('#datetimepickerarrive').datepicker();
+		$('#datetimepickerdepart').datepicker();
+		});*/
+	    </script>
 
     </footer>
 </body>
