@@ -498,7 +498,7 @@ def viewbookingagent():
     # Top 5 booking agents
     toponeyearquery = "select booking_agent_id,count(*) from booking_agent natural join purchases natural join ticket natural join flight WHERE departure_time >=DATE_SUB(NOW(),INTERVAL 1 YEAR) order by count(*) desc limit 5"
     
-    toponemonthquery = "select booking_agent_id,count(*) from booking_agent natural join purchases natural join ticket natural join flight WHERE departure_time >=DATE_SUB(NOW(),INTERVAL 1 MONTH) order by count(*) desc limit 5"
+    toponemonthquery = "select booking_agent_id,count(*) from booking_agent natural join purchases natural join ticket natural join flight WHERE departure_time <= DATE_SUB(NOW(),INTERVAL 1 MONTH) order by count(*) desc limit 5"
 
     #Top 5 booking agents on cost
     topcommissonquery = "SELECT booking_agent_id, sum(b.commission) from (SELECT booking_agent_id, flight_num, COUNT(flight_num) as num_count, price, price * COUNT(flight_num) * .1 as commission FROM ticket natural join purchases natural join flight where booking_agent_id != 0 and departure_time >= DATE_SUB(NOW(),INTERVAL 1 YEAR) GROUP by flight_num limit 5) b GROUP by booking_agent_id ORDER BY sum(b.commission) desc"
@@ -555,4 +555,14 @@ def viewreports():
     return render_template('viewreport.html', total = totalresult, month = monthresult)
 
 
+@app.route('/viewcommission', methods=['GET'])
+def viewcommission():
+
+    defaultcommission = "SELECT booking_agent_id, sum(b.commission) from (SELECT booking_agent_id, flight_num, COUNT(flight_num) as num_count, price, price * COUNT(flight_num) * .1 as commission FROM ticket natural join purchases natural join flight where booking_agent_id != 0 and departure_time >= DATE_SUB(NOW(),INTERVAL 1 MONTH) GROUP by flight_num limit 5) b GROUP by booking_agent_id ORDER BY sum(b.commission) desc"
+
+    defaultcommission = "SELECT booking_agent_id, sum(b.commission)/sum(b.num_count) from (SELECT booking_agent_id, flight_num, COUNT(flight_num) as num_count, price, price * COUNT(flight_num) * .1 as commission FROM ticket natural join purchases natural join flight where booking_agent_id != 0 and departure_time >= DATE_SUB(NOW(),INTERVAL 1 MONTH) GROUP by flight_num limit 5) b GROUP by booking_agent_id ORDER BY sum(b.commission) desc"
+
+    
+
+    return render_template('viewreport.html', total = totalresult, month = monthresult)
 
